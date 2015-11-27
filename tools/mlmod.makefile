@@ -1,7 +1,7 @@
 TEST_DEPS= 							-package Qtest2lib
 
-OCAML_FLAGS= 						$(INCLUDES)
-OCAML_TEST_FLAGS=				$(OCAML_FLAGS) $(TEST_DEPS) -I . -w +26 -linkpkg
+OCAML_FLAGS= 						$(INCLUDES) -w -30
+OCAML_TEST_FLAGS=				$(OCAML_FLAGS) $(TEST_DEPS) -I . -linkpkg
 
 OCAML= 									ocamlc $(OCAML_FLAGS)
 OCAML_TEST=							ocamlfind ocamlc $(OCAML_TEST_FLAGS)

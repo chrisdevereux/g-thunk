@@ -1,7 +1,7 @@
 for f in $(ls _test | grep tests$)
 do
- echo "$(echo $f | sed 's/tests//'):"
+ echo "$(echo $f | sed 's/tests//'):" 1>&2
  "_test/$f"
 
- echo ""
+ echo "" 1>&2
 done
