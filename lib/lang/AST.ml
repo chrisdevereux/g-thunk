@@ -8,7 +8,7 @@ and expr =
   | Literal of literal_node
   | Fn of fn_node
   | Call of call_node
-  | Ref of string
+  | Ref of ref_node
 
 and literal_node =
   | Nothing
@@ -18,6 +18,7 @@ and fn_node = {fn_params: string list; fn_bindings: binding_node list; fn_value:
 
 and call_node = {operator: expr; operand: expr}
 
+and ref_node = {ref_label: string}
 
 let bound_expressions = List.map (fun x -> x.binding_value)
 
@@ -27,3 +28,6 @@ let expr_children (e: expr): expr list =
     | Fn {fn_bindings; fn_value} -> fn_value :: bound_expressions fn_bindings
     | Call {operator; operand} -> [operator; operand]
     | Ref _ -> []
+
+  (*
+  *)
