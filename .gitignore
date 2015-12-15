@@ -1,9 +1,4 @@
 .DS_Store
-node_modules
-*.log
-tmp
-oUnit-anon.cache
-*.a
-*.cm[oxia]
-_test
-.depend
+Carthage
+Cartfile.resolved
+xcuserdata

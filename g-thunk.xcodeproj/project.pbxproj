@@ -1,0 +1,429 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		85573F9E1C2064AB00859EE0 /* codegen-llvm.test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85573F961C2064AB00859EE0 /* codegen-llvm.test.swift */; };
+		85573F9F1C2064AB00859EE0 /* codegen-llvm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85573F971C2064AB00859EE0 /* codegen-llvm.cpp */; };
+		85573FA01C2064AB00859EE0 /* codegen-llvm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85573F991C2064AB00859EE0 /* codegen-llvm.swift */; };
+		85573FA11C2064AB00859EE0 /* ast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85573F9C1C2064AB00859EE0 /* ast.swift */; };
+		85573FA21C2064AB00859EE0 /* cfg.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85573F9D1C2064AB00859EE0 /* cfg.swift */; };
+		85C626501C1F5427001BA852 /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85C6264E1C1F5427001BA852 /* Nimble.framework */; };
+		85C626511C1F5427001BA852 /* Quick.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85C6264F1C1F5427001BA852 /* Quick.framework */; };
+		85C626601C1F5AAB001BA852 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85C6265F1C1F5AAB001BA852 /* AppKit.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		85573F961C2064AB00859EE0 /* codegen-llvm.test.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "codegen-llvm.test.swift"; sourceTree = "<group>"; };
+		85573F971C2064AB00859EE0 /* codegen-llvm.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "codegen-llvm.cpp"; sourceTree = "<group>"; };
+		85573F981C2064AB00859EE0 /* codegen-llvm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "codegen-llvm.h"; sourceTree = "<group>"; };
+		85573F991C2064AB00859EE0 /* codegen-llvm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "codegen-llvm.swift"; sourceTree = "<group>"; };
+		85573F9C1C2064AB00859EE0 /* ast.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ast.swift; sourceTree = "<group>"; };
+		85573F9D1C2064AB00859EE0 /* cfg.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = cfg.swift; sourceTree = "<group>"; };
+		85C626451C1F53FD001BA852 /* gthunk-tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "gthunk-tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		85C6264A1C1F53FD001BA852 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = "gthunk-tests/Info.plist"; sourceTree = "<group>"; };
+		85C6264E1C1F5427001BA852 /* Nimble.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Nimble.framework; path = Carthage/Build/Mac/Nimble.framework; sourceTree = "<group>"; };
+		85C6264F1C1F5427001BA852 /* Quick.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quick.framework; path = Carthage/Build/Mac/Quick.framework; sourceTree = "<group>"; };
+		85C6265D1C1F59B4001BA852 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		85C6265F1C1F5AAB001BA852 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		85C6266B1C1F94FF001BA852 /* bridging-header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "bridging-header.h"; path = "gthunk-tests/bridging-header.h"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		85C626421C1F53FD001BA852 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				85C626601C1F5AAB001BA852 /* AppKit.framework in Frameworks */,
+				85C626511C1F5427001BA852 /* Quick.framework in Frameworks */,
+				85C626501C1F5427001BA852 /* Nimble.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		85573F951C2064AB00859EE0 /* codegen */ = {
+			isa = PBXGroup;
+			children = (
+				85573F961C2064AB00859EE0 /* codegen-llvm.test.swift */,
+				85573F971C2064AB00859EE0 /* codegen-llvm.cpp */,
+				85573F981C2064AB00859EE0 /* codegen-llvm.h */,
+				85573F991C2064AB00859EE0 /* codegen-llvm.swift */,
+			);
+			name = codegen;
+			path = lib/codegen;
+			sourceTree = "<group>";
+		};
+		85573F9A1C2064AB00859EE0 /* parser */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = parser;
+			path = lib/parser;
+			sourceTree = "<group>";
+		};
+		85573F9B1C2064AB00859EE0 /* sema */ = {
+			isa = PBXGroup;
+			children = (
+				85573F9C1C2064AB00859EE0 /* ast.swift */,
+				85573F9D1C2064AB00859EE0 /* cfg.swift */,
+			);
+			name = sema;
+			path = lib/sema;
+			sourceTree = "<group>";
+		};
+		85C6263A1C1F525B001BA852 = {
+			isa = PBXGroup;
+			children = (
+				85573F951C2064AB00859EE0 /* codegen */,
+				85573F9A1C2064AB00859EE0 /* parser */,
+				85573F9B1C2064AB00859EE0 /* sema */,
+				85C6266B1C1F94FF001BA852 /* bridging-header.h */,
+				85C6264A1C1F53FD001BA852 /* Info.plist */,
+				85C6265F1C1F5AAB001BA852 /* AppKit.framework */,
+				85C6265D1C1F59B4001BA852 /* Foundation.framework */,
+				85C6264E1C1F5427001BA852 /* Nimble.framework */,
+				85C6264F1C1F5427001BA852 /* Quick.framework */,
+				85C626461C1F53FD001BA852 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		85C626461C1F53FD001BA852 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				85C626451C1F53FD001BA852 /* gthunk-tests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		85C626441C1F53FD001BA852 /* gthunk-tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 85C6264B1C1F53FD001BA852 /* Build configuration list for PBXNativeTarget "gthunk-tests" */;
+			buildPhases = (
+				85C626411C1F53FD001BA852 /* Sources */,
+				85C626421C1F53FD001BA852 /* Frameworks */,
+				85C626431C1F53FD001BA852 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "gthunk-tests";
+			productName = "gthunk-tests";
+			productReference = 85C626451C1F53FD001BA852 /* gthunk-tests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		85C6263B1C1F525B001BA852 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0720;
+				LastUpgradeCheck = 0720;
+				TargetAttributes = {
+					85C626441C1F53FD001BA852 = {
+						CreatedOnToolsVersion = 7.2;
+					};
+				};
+			};
+			buildConfigurationList = 85C6263E1C1F525B001BA852 /* Build configuration list for PBXProject "g-thunk" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 85C6263A1C1F525B001BA852;
+			productRefGroup = 85C626461C1F53FD001BA852 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				85C626441C1F53FD001BA852 /* gthunk-tests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		85C626431C1F53FD001BA852 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		85C626411C1F53FD001BA852 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				85573FA11C2064AB00859EE0 /* ast.swift in Sources */,
+				85573F9F1C2064AB00859EE0 /* codegen-llvm.cpp in Sources */,
+				85573F9E1C2064AB00859EE0 /* codegen-llvm.test.swift in Sources */,
+				85573FA01C2064AB00859EE0 /* codegen-llvm.swift in Sources */,
+				85573FA21C2064AB00859EE0 /* cfg.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		85C6263F1C1F525B001BA852 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		85C626401C1F525B001BA852 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Release;
+		};
+		85C6264C1C1F53FD001BA852 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = /usr/local/Cellar/llvm/3.6.2/include;
+				INFOPLIST_FILE = "gthunk-tests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks $(PROJECT_DIR)/Carthage/Build/Mac";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"-fPIC",
+					"-fvisibility-inlines-hidden",
+					"-Wall",
+					"-W",
+					"-Wno-unused-parameter",
+					"-Wwrite-strings",
+					"-Wcast-qual",
+					"-Wmissing-field-initializers",
+					"-pedantic",
+					"-Wno-long-long",
+					"-Wcovered-switch-default",
+					"-Wnon-virtual-dtor",
+					"-std=c++11",
+					"-D__STDC_CONSTANT_MACROS",
+					"-D__STDC_FORMAT_MACROS",
+					"-D__STDC_LIMIT_MACROS",
+				);
+				OTHER_LDFLAGS = (
+					"-L/usr/local/Cellar/llvm/3.6.2/lib",
+					"-Wl,-search_paths_first",
+					"-Wl,-headerpad_max_install_names",
+					"-lLLVMX86Disassembler",
+					"-lLLVMX86AsmParser",
+					"-lLLVMX86CodeGen",
+					"-lLLVMSelectionDAG",
+					"-lLLVMAsmPrinter",
+					"-lLLVMCodeGen",
+					"-lLLVMScalarOpts",
+					"-lLLVMProfileData",
+					"-lLLVMInstCombine",
+					"-lLLVMTransformUtils",
+					"-lLLVMipa",
+					"-lLLVMAnalysis",
+					"-lLLVMX86Desc",
+					"-lLLVMMCDisassembler",
+					"-lLLVMX86Info",
+					"-lLLVMX86AsmPrinter",
+					"-lLLVMX86Utils",
+					"-lLLVMMCJIT",
+					"-lLLVMTarget",
+					"-lLLVMExecutionEngine",
+					"-lLLVMRuntimeDyld",
+					"-lLLVMObject",
+					"-lLLVMMCParser",
+					"-lLLVMBitReader",
+					"-lLLVMMC",
+					"-lLLVMCore",
+					"-lLLVMSupport",
+					"-lcurses",
+					"-lpthread",
+					"-lz",
+					"-lm",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.gthunk.gthunk-tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_OBJC_BRIDGING_HEADER = "gthunk-tests/bridging-header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		85C6264D1C1F53FD001BA852 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = /usr/local/Cellar/llvm/3.6.2/include;
+				INFOPLIST_FILE = "gthunk-tests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks $(PROJECT_DIR)/Carthage/Build/Mac";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"-fPIC",
+					"-fvisibility-inlines-hidden",
+					"-Wall",
+					"-W",
+					"-Wno-unused-parameter",
+					"-Wwrite-strings",
+					"-Wcast-qual",
+					"-Wmissing-field-initializers",
+					"-pedantic",
+					"-Wno-long-long",
+					"-Wcovered-switch-default",
+					"-Wnon-virtual-dtor",
+					"-std=c++11",
+					"-D__STDC_CONSTANT_MACROS",
+					"-D__STDC_FORMAT_MACROS",
+					"-D__STDC_LIMIT_MACROS",
+				);
+				OTHER_LDFLAGS = (
+					"-L/usr/local/Cellar/llvm/3.6.2/lib",
+					"-Wl,-search_paths_first",
+					"-Wl,-headerpad_max_install_names",
+					"-lLLVMX86Disassembler",
+					"-lLLVMX86AsmParser",
+					"-lLLVMX86CodeGen",
+					"-lLLVMSelectionDAG",
+					"-lLLVMAsmPrinter",
+					"-lLLVMCodeGen",
+					"-lLLVMScalarOpts",
+					"-lLLVMProfileData",
+					"-lLLVMInstCombine",
+					"-lLLVMTransformUtils",
+					"-lLLVMipa",
+					"-lLLVMAnalysis",
+					"-lLLVMX86Desc",
+					"-lLLVMMCDisassembler",
+					"-lLLVMX86Info",
+					"-lLLVMX86AsmPrinter",
+					"-lLLVMX86Utils",
+					"-lLLVMMCJIT",
+					"-lLLVMTarget",
+					"-lLLVMExecutionEngine",
+					"-lLLVMRuntimeDyld",
+					"-lLLVMObject",
+					"-lLLVMMCParser",
+					"-lLLVMBitReader",
+					"-lLLVMMC",
+					"-lLLVMCore",
+					"-lLLVMSupport",
+					"-lcurses",
+					"-lpthread",
+					"-lz",
+					"-lm",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.gthunk.gthunk-tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_OBJC_BRIDGING_HEADER = "gthunk-tests/bridging-header.h";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		85C6263E1C1F525B001BA852 /* Build configuration list for PBXProject "g-thunk" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				85C6263F1C1F525B001BA852 /* Debug */,
+				85C626401C1F525B001BA852 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		85C6264B1C1F53FD001BA852 /* Build configuration list for PBXNativeTarget "gthunk-tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				85C6264C1C1F53FD001BA852 /* Debug */,
+				85C6264D1C1F53FD001BA852 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 85C6263B1C1F525B001BA852 /* Project object */;
+}
