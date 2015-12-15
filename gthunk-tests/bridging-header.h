@@ -10,5 +10,8 @@
 #define bridging_header_h
 
 #include "codegen-llvm.h"
+#include "audio-io.h"
+#include "uv.h"
+#include <stdlib.h>
 
 #endif /* bridging_header_h */

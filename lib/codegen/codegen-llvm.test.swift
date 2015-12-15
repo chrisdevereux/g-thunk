@@ -13,7 +13,7 @@ class ASTTests : QuickSpec {
   override func spec() {
     describe("When a function is JIT-ed") {
       it("should return the function result") {
-        let fnPtr = codegen_prog(Program(
+        let fnPtr = compileProgram(Program(
           procedures: [
             Procedure(
               name: "TestProc",

@@ -7,7 +7,7 @@
 //
 
 
-func codegen_prog(program: Program) -> JITFn {
+func compileProgram(program: Program) -> JITFn {
   let ctx = codegen_ctx_alloc()
   let main = program.procedures[program.entry]
   
