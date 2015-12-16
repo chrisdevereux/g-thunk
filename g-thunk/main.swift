@@ -32,6 +32,14 @@ let myRenderLoop = compileProgram(program)
 let io = audio_io_alloc()
 
 // For now, use a hardcoded renderloop until the compiler produces useful code
+// This function should be expressible as:
+//
+// let sinOsc = (hz: Number, {time: Second}) -> sin(2 * PI * hz * time)
+// export sinOsc(440)
+//
+// The last argument contains the render state.
+// In the future, this may be extended to include other kinds of inputs
+//
 func renderLoop(
   inputs: UnsafePointer<AudioBuffer>,
   outputs: UnsafePointer<AudioBuffer>,
