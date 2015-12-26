@@ -14,6 +14,10 @@
 		85573FA21C2064AB00859EE0 /* cfg.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85573F9D1C2064AB00859EE0 /* cfg.swift */; };
 		85573FA41C206B3100859EE0 /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85C6264E1C1F5427001BA852 /* Nimble.framework */; };
 		85573FA51C206B3100859EE0 /* Quick.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85C6264F1C1F5427001BA852 /* Quick.framework */; };
+		859D8F941C2C01FB00810E2C /* grammar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859D8F931C2C01FB00810E2C /* grammar.swift */; };
+		859D8F961C2DAB1800810E2C /* grammar.test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859D8F951C2DAB1800810E2C /* grammar.test.swift */; };
+		85C5D7551C26FEF600E706C2 /* parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85C5D7541C26FEF600E706C2 /* parser.swift */; };
+		85C5D7561C26FF5A00E706C2 /* parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85C5D7541C26FEF600E706C2 /* parser.swift */; };
 		85C626601C1F5AAB001BA852 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85C6265F1C1F5AAB001BA852 /* AppKit.framework */; };
 		85D17E081C206E2B006A89D2 /* audio-io.c in Sources */ = {isa = PBXBuildFile; fileRef = 85D17E061C206E2B006A89D2 /* audio-io.c */; };
 		85D17E101C20728D006A89D2 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85D17E0F1C20728D006A89D2 /* main.swift */; };
@@ -22,6 +26,7 @@
 		85D17E161C2072F0006A89D2 /* codegen-llvm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85573F991C2064AB00859EE0 /* codegen-llvm.swift */; };
 		85D17E171C2072F0006A89D2 /* ast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85573F9C1C2064AB00859EE0 /* ast.swift */; };
 		85D17E181C2072F0006A89D2 /* cfg.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85573F9D1C2064AB00859EE0 /* cfg.swift */; };
+		85DCA7691C29C5CC00CF18C8 /* parser.test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DCA7681C29C5CC00CF18C8 /* parser.test.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -43,6 +48,9 @@
 		85573F991C2064AB00859EE0 /* codegen-llvm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "codegen-llvm.swift"; sourceTree = "<group>"; };
 		85573F9C1C2064AB00859EE0 /* ast.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ast.swift; sourceTree = "<group>"; };
 		85573F9D1C2064AB00859EE0 /* cfg.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = cfg.swift; sourceTree = "<group>"; };
+		859D8F931C2C01FB00810E2C /* grammar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = grammar.swift; sourceTree = "<group>"; };
+		859D8F951C2DAB1800810E2C /* grammar.test.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = grammar.test.swift; sourceTree = "<group>"; };
+		85C5D7541C26FEF600E706C2 /* parser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = parser.swift; sourceTree = "<group>"; };
 		85C626451C1F53FD001BA852 /* gthunk-tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "gthunk-tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		85C6264A1C1F53FD001BA852 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = "gthunk-tests/Info.plist"; sourceTree = "<group>"; };
 		85C6264E1C1F5427001BA852 /* Nimble.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Nimble.framework; path = Carthage/Build/Mac/Nimble.framework; sourceTree = "<group>"; };
@@ -54,6 +62,7 @@
 		85D17E071C206E2B006A89D2 /* audio-io.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "audio-io.h"; sourceTree = "<group>"; };
 		85D17E0D1C20728D006A89D2 /* g-thunk */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "g-thunk"; sourceTree = BUILT_PRODUCTS_DIR; };
 		85D17E0F1C20728D006A89D2 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		85DCA7681C29C5CC00CF18C8 /* parser.test.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = parser.test.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,6 +101,10 @@
 		85573F9A1C2064AB00859EE0 /* parser */ = {
 			isa = PBXGroup;
 			children = (
+				85C5D7541C26FEF600E706C2 /* parser.swift */,
+				85DCA7681C29C5CC00CF18C8 /* parser.test.swift */,
+				859D8F931C2C01FB00810E2C /* grammar.swift */,
+				859D8F951C2DAB1800810E2C /* grammar.test.swift */,
 			);
 			name = parser;
 			path = lib/parser;
@@ -239,11 +252,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				859D8F941C2C01FB00810E2C /* grammar.swift in Sources */,
+				85C5D7551C26FEF600E706C2 /* parser.swift in Sources */,
 				85573FA11C2064AB00859EE0 /* ast.swift in Sources */,
 				85573F9F1C2064AB00859EE0 /* codegen-llvm.cpp in Sources */,
 				85573F9E1C2064AB00859EE0 /* codegen-llvm.test.swift in Sources */,
+				85DCA7691C29C5CC00CF18C8 /* parser.test.swift in Sources */,
 				85573FA01C2064AB00859EE0 /* codegen-llvm.swift in Sources */,
 				85D17E081C206E2B006A89D2 /* audio-io.c in Sources */,
+				859D8F961C2DAB1800810E2C /* grammar.test.swift in Sources */,
 				85573FA21C2064AB00859EE0 /* cfg.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -255,6 +272,7 @@
 				85D17E141C2072F0006A89D2 /* audio-io.c in Sources */,
 				85D17E151C2072F0006A89D2 /* codegen-llvm.cpp in Sources */,
 				85D17E161C2072F0006A89D2 /* codegen-llvm.swift in Sources */,
+				85C5D7561C26FF5A00E706C2 /* parser.swift in Sources */,
 				85D17E171C2072F0006A89D2 /* ast.swift in Sources */,
 				85D17E181C2072F0006A89D2 /* cfg.swift in Sources */,
 				85D17E101C20728D006A89D2 /* main.swift in Sources */,

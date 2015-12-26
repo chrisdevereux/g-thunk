@@ -50,7 +50,7 @@ func renderLoop(
   sampleRate: Float32
 ) {
   let PI: Float32 = 3.1415926535;
-  let pitch: Float32 = 440.0;
+  let pitch: Float32 = 180.0;
   let radians_per_second: Float32 = pitch * 2.0 * PI;
   let seconds_per_frame = 1.0 / sampleRate;
   
