@@ -101,15 +101,11 @@ func == (lhs: TokenCursor, rhs: TokenCursor) -> Bool {
 /** Character Class **/
 
 
-class CharacterClass {
-  let members: Set<Character>
-
-  init(characters: Set<Character>) {
-    members = characters
-  }
+struct CharacterClass {
+  let characters: Set<Character>
 
   func contains(chr: Character) -> Bool {
-    return members.contains(chr)
+    return characters.contains(chr)
   }
 }
 

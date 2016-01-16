@@ -1,5 +1,41 @@
 import Quick
 import Nimble
+import SwiftCheck
+
+protocol TestableParser: Arbitrary, Parser {
+  static func arbitraryOutput() -> Gen<Self.ParseValue>
+  static func arbitraryInputs(output: Self.ParseValue) -> Gen<String>
+}
+
+extension CharacterClass: Arbitrary {
+  static var arbitrary: Gen<CharacterClass> {
+    get {
+      return String.arbitrary.map{ CharacterClass(characters: Set($0.characters)) }
+    }
+  }
+}
+
+
+struct ValidOutput<ParserType: TestableParser>: Arbitrary {
+  let parser: ParserType
+  let input: String
+  let output: ParserType.ParseValue
+  
+  static var arbitrary: Gen<ValidOutput<ParserType>> {
+    get {
+      return Gen
+        .zip(ParserType.arbitrary, ParserType.arbitraryOutput())
+        .flatMap{ (parser: ParserType, output: ParserType.ParseValue) in
+          return ParserType
+            .arbitraryInputs(output)
+            .map{ (input : String) in
+              ValidOutput(parser: parser, input: input, output: output)
+            }
+        }
+    }
+  }
+}
+
 
 class ParserTests: QuickSpec {
   override func spec() {
