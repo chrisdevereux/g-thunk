@@ -1,5 +1,11 @@
-struct ASTModule : Equatable {
+struct ASTModule : Equatable, Hashable {
   let declarations: [ASTLetBinding]
+  
+  var hashValue: Int {
+    get {
+      return declarations.prefix(5).reduce(0, combine:hashCombine)
+    }
+  }
 }
 
 func == (lhs: ASTModule, rhs: ASTModule) -> Bool {
@@ -7,9 +13,15 @@ func == (lhs: ASTModule, rhs: ASTModule) -> Bool {
 }
 
 
-struct ASTLetBinding : Equatable {
+struct ASTLetBinding : Equatable, Hashable {
   let name: String
   let value: ASTExpression
+  
+  var hashValue: Int {
+    get {
+      return 0
+    }
+  }
 }
 
 func == (lhs: ASTLetBinding, rhs: ASTLetBinding) -> Bool {
@@ -17,12 +29,26 @@ func == (lhs: ASTLetBinding, rhs: ASTLetBinding) -> Bool {
 }
 
 
-indirect enum ASTExpression : Equatable {
+indirect enum ASTExpression : Equatable, Hashable {
   case Real(Double)
   case Ref(String)
   case FnCall(ASTExpression, ASTExpression)
   case FnDef(String, [ASTLetBinding], ASTExpression)
   case BinaryOp(BinOpType, ASTExpression, ASTExpression)
+  
+  var hashValue: Int {
+    get {
+      switch self {
+      case .Real(let val): return val.hashValue
+      case .Ref(let id): return id.hashValue
+      case .FnCall(let site, let param): return site.hashValue | param.hashValue
+      case .FnDef(let param, let bindings, let expr):
+        return param.hashValue | bindings.prefix(5).reduce(0, combine:hashCombine) | expr.hashValue
+      case .BinaryOp(let type, let lhs, let rhs):
+        return type.hashValue | lhs.hashValue | rhs.hashValue
+      }
+    }
+  }
 }
 
 func == (lhs: ASTExpression, rhs: ASTExpression) -> Bool {
@@ -42,3 +68,8 @@ func == (lhs: ASTExpression, rhs: ASTExpression) -> Bool {
 enum BinOpType {
   case Mutliply
 }
+
+func hashCombine<T: Hashable>(hash: Int, decl: T) -> Int {
+  return decl.hashValue | hash
+}
+

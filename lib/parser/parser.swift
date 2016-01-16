@@ -1,11 +1,3 @@
-//
-//  parser.swift
-//  g-thunk
-//
-//  Created by Chris Devereux on 20/12/2015.
-//
-//
-
 infix operator <*> { associativity left precedence 130 }
 infix operator |> { associativity left precedence 130 }
 infix operator <* { associativity left precedence 130 }

@@ -1,12 +1,3 @@
-//
-//  CFG.swift
-//  g-thunk
-//
-//  Created by Chris Devereux on 14/12/2015.
-//
-//
-
-
 /**
   Program Structure
 **/

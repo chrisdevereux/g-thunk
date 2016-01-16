@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8541B3401C2E2C510063858F /* type.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8541B33F1C2E2C510063858F /* type.swift */; };
+		8541B3421C2ED3BC0063858F /* scope-resolution.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8541B3411C2ED3BC0063858F /* scope-resolution.swift */; };
 		85573F9E1C2064AB00859EE0 /* codegen-llvm.test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85573F961C2064AB00859EE0 /* codegen-llvm.test.swift */; };
 		85573F9F1C2064AB00859EE0 /* codegen-llvm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85573F971C2064AB00859EE0 /* codegen-llvm.cpp */; };
 		85573FA01C2064AB00859EE0 /* codegen-llvm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85573F991C2064AB00859EE0 /* codegen-llvm.swift */; };
@@ -42,6 +44,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		8541B33F1C2E2C510063858F /* type.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = type.swift; sourceTree = "<group>"; };
+		8541B3411C2ED3BC0063858F /* scope-resolution.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "scope-resolution.swift"; sourceTree = "<group>"; };
 		85573F961C2064AB00859EE0 /* codegen-llvm.test.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "codegen-llvm.test.swift"; sourceTree = "<group>"; };
 		85573F971C2064AB00859EE0 /* codegen-llvm.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "codegen-llvm.cpp"; sourceTree = "<group>"; };
 		85573F981C2064AB00859EE0 /* codegen-llvm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "codegen-llvm.h"; sourceTree = "<group>"; };
@@ -115,6 +119,8 @@
 			children = (
 				85573F9C1C2064AB00859EE0 /* ast.swift */,
 				85573F9D1C2064AB00859EE0 /* cfg.swift */,
+				8541B33F1C2E2C510063858F /* type.swift */,
+				8541B3411C2ED3BC0063858F /* scope-resolution.swift */,
 			);
 			name = sema;
 			path = lib/sema;
@@ -256,12 +262,14 @@
 				85C5D7551C26FEF600E706C2 /* parser.swift in Sources */,
 				85573FA11C2064AB00859EE0 /* ast.swift in Sources */,
 				85573F9F1C2064AB00859EE0 /* codegen-llvm.cpp in Sources */,
+				8541B3421C2ED3BC0063858F /* scope-resolution.swift in Sources */,
 				85573F9E1C2064AB00859EE0 /* codegen-llvm.test.swift in Sources */,
 				85DCA7691C29C5CC00CF18C8 /* parser.test.swift in Sources */,
 				85573FA01C2064AB00859EE0 /* codegen-llvm.swift in Sources */,
 				85D17E081C206E2B006A89D2 /* audio-io.c in Sources */,
 				859D8F961C2DAB1800810E2C /* grammar.test.swift in Sources */,
 				85573FA21C2064AB00859EE0 /* cfg.swift in Sources */,
+				8541B3401C2E2C510063858F /* type.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

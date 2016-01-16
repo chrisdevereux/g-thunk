@@ -1,11 +1,3 @@
-//
-//  main.swift
-//  g-thunk
-//
-//  Created by Chris Devereux on 15/12/2015.
-//
-//
-
 import Foundation
 
 /** Compiler Init **/
