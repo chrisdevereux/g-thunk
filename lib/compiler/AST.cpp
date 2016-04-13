@@ -1,5 +1,5 @@
 #include "AST.hpp"
-#include <functional>
+#include "Util.hpp"
 
 namespace ast {
   Expression::~Expression()
@@ -18,18 +18,6 @@ namespace ast {
   
   
   /** Comparisons **/
-  
-  template <typename T>
-  bool equalPointers(T const *lhs, T const *rhs) {
-    return *lhs == *rhs;
-  }
-  
-  template <typename T, typename Compare>
-  bool equalVecs(Arena::vector<T> const &lhs, Arena::vector<T> const &rhs, Compare const &compare) {
-    return lhs.size() == rhs.size()
-    && std::equal(lhs.begin(), lhs.end(), rhs.begin(), compare)
-    ;
-  }
   
   bool Module::operator==(const Module &rhs) const {
     return declarations == rhs.declarations;
@@ -58,7 +46,7 @@ namespace ast {
     if (!that) return false;
     
     return *this->function == *that->function
-    && equalVecs(this->params, that->params, equalPointers<ast::Expression>);
+    && equalCollections(this->params, that->params, equalData<ast::Expression>);
   }
   
   bool Function::operator==(const ast::Expression &rhs) const {
@@ -75,15 +63,6 @@ namespace ast {
     
     return this->bindings == that->bindings
     && *this->value == *that->value;
-  }
-  
-  bool Conditional::operator==(const ast::Expression &rhs) const {
-    auto that = dynamic_cast<Conditional const *>(&rhs);
-    if (!that) return false;
-    
-    return *this->condition == *that->condition
-    && *this->trueBranch == *that->trueBranch
-    && *this->falseBranch == *that->falseBranch;
   }
   
   
@@ -103,8 +82,5 @@ namespace ast {
   }
   void LexicalScope::visit(Expression::Visitor *visitor) const {
     visitor->acceptLexicalScope(this);
-  }
-  void Conditional::visit(Expression::Visitor *visitor) const {
-    visitor->acceptConditional(this);
   }
 }

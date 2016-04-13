@@ -110,15 +110,6 @@ namespace ast {
     virtual bool operator ==(const Expression &rhs) const;
   };
   
-  struct Conditional : public Expression {
-    Expression const *condition;
-    Expression const *trueBranch;
-    Expression const *falseBranch;
-    
-    virtual void visit(Visitor *visitor) const;
-    virtual bool operator ==(const Expression &rhs) const;
-  };
-  
   class Expression::Visitor {
   public:
     virtual void acceptScalar(Scalar const *s) = 0;
@@ -126,6 +117,5 @@ namespace ast {
     virtual void acceptFunction(Function const *s) = 0;
     virtual void acceptApply(Apply const *s) = 0;
     virtual void acceptLexicalScope(LexicalScope const *s) = 0;
-    virtual void acceptConditional(Conditional const *s) = 0;
   };
 }
