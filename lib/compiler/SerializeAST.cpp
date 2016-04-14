@@ -34,10 +34,10 @@ namespace ast {
   template <typename Action>
   auto declaration(Action const &out) {
     return taggedSExp("let", [=](State const &state) -> Result {
-      Declaration result(state.arena);
+      Declaration result;
       
       return state
-      >> identifierString(receive(&result.name))
+      >> identifierString(receiveSymbol(&result.name))
       >> whitespace
       >> expressionTree(receive(&result.value))
       >> emit(&result, out) >> log("declaration")
@@ -138,10 +138,10 @@ namespace ast {
   template <typename Action>
   auto identifier(Action const &out) {
     return [=](State const &state) -> Result {
-      Identifier *result = state.create<Identifier>(state.arena);
+      Identifier *result = state.create<Identifier>();
       
       return state
-      >> identifierString(receive(&result->value))
+      >> identifierString(receiveSymbol(&result->value))
       >> emit(&result, out) >> log("ident")
       ;
     };

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Arena.hpp"
+#include "Symbol.hpp"
 
 #include <vector>
 #include <string>
@@ -10,12 +11,11 @@ namespace ast {
   struct Apply;
 
   struct Declaration {
-    Arena::string name;
+    Symbol name;
     Expression const *value;
     
-    explicit Declaration(Arena *arena)
-    : name(arena->allocator<char>())
-    , value(nullptr)
+    Declaration()
+    : value(nullptr)
     {}
     
     bool operator ==(const Declaration &rhs) const;
@@ -62,11 +62,7 @@ namespace ast {
   };
   
   struct Identifier : public Expression {
-    Arena::string value;
-    
-    explicit Identifier(Arena *arena)
-    : value(arena->allocator<char>())
-    {}
+    Symbol value;
     
     virtual void visit(Visitor *visitor) const;
     virtual bool operator ==(const Expression &rhs) const;

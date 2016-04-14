@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Arena.hpp"
+#include "Symbol.hpp"
 
 #include <experimental/optional>
 #include <functional>
@@ -206,6 +207,13 @@ namespace parse {
   inline auto buildString(Arena::string *target) {
     return [=](char const &val) {
       target->append(1, val);
+    };
+  }
+  
+  // Append each received parse value char to a string
+  inline auto receiveSymbol(Symbol *target) {
+    return [=](Arena::string const &val) {
+      *target = Symbol::get(val);
     };
   }
   
