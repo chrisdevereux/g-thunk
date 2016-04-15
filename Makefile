@@ -1,6 +1,8 @@
 $(shell mkdir -p .build)
 
 CPPFLAGS=-Ilib/compiler -Wall -Ilib/support -std=gnu++14
+TEST_CPPFLAGS=-Itest/runners
+
 LDFLAGS=-lc++
 CXX=clang++
 
@@ -26,7 +28,7 @@ clean:
 # Tests
 
 test/%.testcase : test/%/main.cpp $(OBJS)
-	$(CXX) $(CPPFLAGS) $(LDFLAGS) -o $@ $(OBJS) $<
+	$(CXX) $(CPPFLAGS) $(TEST_CPPFLAGS) $(LDFLAGS) -o $@ $(OBJS) $<
 
 test/%.run : test/%.testcase
 	$< test/$*/examples/*
