@@ -1,6 +1,6 @@
 $(shell mkdir -p .build)
 
-CPPFLAGS=-Ilib/compiler -Wall -Ilib/support -std=gnu++14
+CPPFLAGS=-Ilib/compiler -Wall -Ilib/runtime -Ilib/support -std=gnu++14
 TEST_CPPFLAGS=-Itest/runners
 
 LDFLAGS=-lc++

@@ -1,0 +1,8 @@
+
+.main
+.alias-main
+call
+exit
+
+.other
+exit
