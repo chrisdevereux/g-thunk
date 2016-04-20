@@ -6,6 +6,7 @@
 #include <experimental/optional>
 #include <functional>
 #include <string>
+#include <sstream>
 #include <iostream>
 
 namespace parse {
@@ -31,8 +32,10 @@ namespace parse {
       }
    */
   
+  
   // Represents the current parse state.
   struct State {
+    std::shared_ptr<std::vector<std::string>> errors;
     Arena::string const *input;
     size_t offset;
     Arena *arena;
@@ -56,7 +59,8 @@ namespace parse {
     }
     
     State(Arena::string const *input_, Arena *arena_, size_t offset_)
-    : input(input_)
+    : errors(std::make_shared<std::vector<std::string>>())
+    , input(input_)
     , offset(offset_)
     , arena(arena_)
     {}
@@ -92,11 +96,28 @@ namespace parse {
     inline State advance(size_t count) const {
       return State(input, arena, offset + count);
     }
+    
+    // Return the line # of the current cursor
+    inline size_t lineNo() const {
+      size_t line = 0;
+      
+      for (size_t i = 0; i < offset; ++i) {
+        if (get(i) == '\n') ++line;
+      }
+      
+      return line;
+    }
   };
   
+  // Parser return value
   using Result = std::experimental::optional<State>;
   auto const reject = std::experimental::nullopt;
   
+  // Parser concept
+  template <typename T>
+  using is_parser = std::is_same<std::result_of<T(State const &)>, Result>;
+  
+  // Exportable parser type
   using Grammar = std::function<Result(State const &)>;
   
   // Convenience function, applying a parser to an input stream
@@ -308,11 +329,14 @@ namespace parse {
   }
   
   
+  
   /** Combinators **/
   
   // Try the parser, continuing with the previous state if it fails
   template <typename Parser>
   auto optional(Parser const &parser) {
+    std::enable_if<is_parser<Parser>::value>();
+    
     return [=](State const &state) -> Result {
       return parser(state) ?: state;
     };
@@ -323,6 +347,8 @@ namespace parse {
   template <typename Parser>
   auto repeat(Parser const &content) {
     return [=](State const &initialState) -> Result {
+      std::enable_if<is_parser<Parser>::value>();
+      
       Result step;
       State nextState = initialState;
       
@@ -347,15 +373,19 @@ namespace parse {
   
   namespace operators {
     // Feed an input state into a sequence of parsers
-    template <typename Fn>
-    Result operator>> (State const &input, Fn const &parser) {
+    template <typename Parser>
+    Result operator>> (State const &input, Parser const &parser) {
+      std::enable_if<is_parser<Parser>::value>();
+      
       return parser(input);
     }
     
     // Pipe a parse result into the next parser, rejecting if the previous
     // parser failed
-    template <typename Fn>
-    Result operator>> (Result const &input, Fn const &parser) {
+    template <typename Parser>
+    Result operator>> (Result const &input, Parser const &parser) {
+      std::enable_if<is_parser<Parser>::value>();
+      
       if (input) {
         return parser(*input);
         
@@ -363,7 +393,21 @@ namespace parse {
         return input;
       }
     }
+    
+    // Parser composition
+    template <typename LHS, typename RHS>
+    auto operator>> (LHS const &lhs, RHS const &rhs) {
+      std::enable_if<is_parser<LHS>::value>();
+      std::enable_if<is_parser<RHS>::value>();
+      
+      return [=](State const &state) -> Result {
+        return state >> lhs >> rhs;
+      };
+    }
   }
+  
+  
+  
   
   /** Conveniences **/
   
@@ -382,6 +426,9 @@ namespace parse {
   // Match one or more of `member`, separated by `delimiter`
   template <typename Parser, typename Delimiter>
   auto delimited(Parser member, Delimiter delimiter) {
+    std::enable_if<is_parser<Parser>::value>();
+    std::enable_if<is_parser<Delimiter>::value>();
+    
     using namespace operators;
     
     auto delimitedMember = [=](State const &state) -> Result {
@@ -407,6 +454,8 @@ namespace parse {
   //    (<content>)
   template <typename Parser>
   auto sExp(Parser content) {
+    std::enable_if<is_parser<Parser>::value>();
+    
     using namespace operators;
     
     return [=](State const &state) -> Result {
@@ -429,6 +478,8 @@ namespace parse {
   //    (foo <content>)
   template <typename Parser>
   auto taggedSExp(char const *tag, Parser content) {
+    std::enable_if<is_parser<Parser>::value>();
+    
     using namespace operators;
     
     return [=](State const &state) -> Result {
