@@ -35,7 +35,8 @@ namespace parse {
   
   // Represents the current parse state.
   struct State {
-    std::shared_ptr<std::vector<std::string>> errors;
+    typedef std::shared_ptr<std::vector<std::string>> ErrorList;
+    ErrorList errors;
     Arena::string const *input;
     size_t offset;
     Arena *arena;
@@ -58,8 +59,8 @@ namespace parse {
       return State(string, arena, 0);
     }
     
-    State(Arena::string const *input_, Arena *arena_, size_t offset_)
-    : errors(std::make_shared<std::vector<std::string>>())
+    State(Arena::string const *input_, Arena *arena_, size_t offset_, ErrorList errors_ = std::make_shared<std::vector<std::string>>())
+    : errors(errors_)
     , input(input_)
     , offset(offset_)
     , arena(arena_)
@@ -94,12 +95,12 @@ namespace parse {
     
     // Return the next parse state, consuming `count` characters
     inline State advance(size_t count) const {
-      return State(input, arena, offset + count);
+      return State(input, arena, offset + count, errors);
     }
     
     // Return the line # of the current cursor
     inline size_t lineNo() const {
-      size_t line = 0;
+      size_t line = 1;
       
       for (size_t i = 0; i < offset; ++i) {
         if (get(i) == '\n') ++line;
@@ -123,12 +124,14 @@ namespace parse {
   // Convenience function, applying a parser to an input stream
   // and returning true on success, or false on failure
   template <typename Parser>
-  bool read(std::istream &str, Arena *arena, Parser const &parser) {
+  bool read(std::istream &str, Arena *arena, Parser const &parser, std::vector<std::string> *errors = nullptr) {
     State state(State::read(str, arena));
     
     if (parser(state)) {
       return true;
+      
     } else {
+      if (errors) *errors = *state.errors;
       return false;
     }
   }
@@ -328,6 +331,16 @@ namespace parse {
     };
   }
   
+  // Log an error to the parse state's error list
+  inline Result fail(State state, char const *msg) {
+    std::stringstream err;
+    err << "Parse error (line " << state.lineNo() << "):\n"
+    << "expected " << msg;
+    
+    state.errors->push_back(err.str());
+    return reject;
+  }
+  
   
   
   /** Combinators **/
@@ -339,6 +352,16 @@ namespace parse {
     
     return [=](State const &state) -> Result {
       return parser(state) ?: state;
+    };
+  }
+  
+  // Log an error if the parse fails
+  template <typename Parser>
+  inline auto require(char const *msg, Parser const &parser) {
+    std::enable_if<is_parser<Parser>::value>();
+    
+    return [=](State const &state) -> Result {
+      return parser(state) ?: fail(state, msg);
     };
   }
   
@@ -421,6 +444,11 @@ namespace parse {
     auto newline = repeat(match(exactly('\n')));
     auto whitespace = repeat(match(whitespaceChar));
     auto optionalWhitespace = optional(whitespace);
+    
+    // Match the keyword, raising an error if it is not matched
+    inline auto requiredMatch(char const *string) {
+      return require(string, match(string));
+    }
   }
   
   // Match one or more of `member`, separated by `delimiter`
