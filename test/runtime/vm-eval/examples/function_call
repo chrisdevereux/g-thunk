@@ -1,0 +1,16 @@
+@given:
+  .main
+  push_sym myFunc
+  call
+  exit
+
+  .myFunc
+  push f32 2
+  add_sv
+  exit
+
+@with:
+  {1 2 3}
+
+@expect:
+  {3 4 5}

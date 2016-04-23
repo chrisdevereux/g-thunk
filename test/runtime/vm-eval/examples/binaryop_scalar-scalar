@@ -1,0 +1,13 @@
+@given:
+  .main
+  push f32 2
+  push f32 3
+  add_ss
+  fill
+  exit_fixup_v 1 1
+  
+@with:
+  {1 2 3}
+  
+@expect:
+  {5 5 5}
