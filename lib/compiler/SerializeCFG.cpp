@@ -115,12 +115,12 @@ namespace cfg {
   
   // Parse
   template <typename Action>
-  Grammar functionRef(Action out) {
+  auto functionRef(Action out) {
     return [=](State const &state) -> Result {
       auto result = state.create<FunctionRef>();
       
       return state
-      >> identifierString(receiveSymbol(&result->name))
+      >> identifierString(receive(&result->name))
       >> emit(&result, out)
       ;
     };

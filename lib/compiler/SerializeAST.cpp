@@ -141,7 +141,7 @@ namespace ast {
       Identifier *result = state.create<Identifier>();
       
       return state
-      >> identifierString(receiveSymbol(&result->value))
+      >> identifierString(receive(&result->value))
       >> emit(&result, out) >> log("ident")
       ;
     };

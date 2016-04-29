@@ -34,7 +34,7 @@ namespace vm {
     auto label(Action out) {
       return [=](State const &state) -> Result {
         Symbol result;
-        return state >> match(exactly('.')) >> identifierString(receiveSymbol(&result)) >> emit(&result, out);
+        return state >> match(exactly('.')) >> identifierString(receive(&result)) >> emit(&result, out);
       };
     }
     
@@ -48,7 +48,7 @@ namespace vm {
         };
         
         auto intOperand = integer<uint32_t>(receive(&result.operand.u32));
-        auto symbolOperand = identifierString(receiveSymbol(&result.operand.sym));
+        auto symbolOperand = identifierString(receive(&result.operand.sym));
         auto typedOperand = typedValue(receive(&result.operand), receive(&result.operandType));
         auto u16PairOperand = integer<uint16_t>(receive(&result.operand.u16pair.first))
         >> spaces >> integer<uint16_t>(receive(&result.operand.u16pair.second))

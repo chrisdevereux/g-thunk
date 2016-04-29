@@ -532,11 +532,13 @@ namespace parse {
     auto start = identifierChar && !digitChar;
     
     return [=](State const &state) {
-      Arena::string result(state.allocator<char>());
+      Arena::string chars(state.allocator<char>());
+      Symbol result;
       
       return state
-      >> match(start, buildString(&result))
-      >> optional(repeat(match(identifierChar, buildString(&result))))
+      >> match(start, buildString(&chars))
+      >> optional(repeat(match(identifierChar, buildString(&chars))))
+      >> inject([&] { result = Symbol::get(chars.c_str()); })
       >> emit(&result, out)
       ;
     };
