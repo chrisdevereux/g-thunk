@@ -37,7 +37,7 @@ namespace ast {
       Declaration result;
       
       return state
-      >> identifierString(receiveSymbol(&result.name))
+      >> identifierString(receive(&result.name))
       >> whitespace
       >> expressionTree(receive(&result.value))
       >> emit(&result, out) >> log("declaration")

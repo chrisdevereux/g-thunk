@@ -83,11 +83,11 @@ namespace ast {
   };
   
   struct Function : public Expression {
-    Arena::vector<Arena::string> params;
+    Arena::vector<Symbol> params;
     Expression const *value;
     
     explicit Function(Arena *arena)
-    : params(arena->allocator<Arena::string>())
+    : params(arena->allocator<Symbol>())
     {}
     
     virtual void visit(Visitor *visitor) const;
