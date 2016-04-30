@@ -1,1 +1,1 @@
-(myFunc 0 (param 1))
+(myFunc [F32] (param 1))

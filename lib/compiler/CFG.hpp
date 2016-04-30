@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Symbol.hpp"
+#include "TypedSymbol.hpp"
 #include "Arena.hpp"
 #include "Type.hpp"
 
@@ -8,6 +8,8 @@ namespace cfg {
   struct Value {
     struct Visitor;
     struct MutatingVisitor;
+    
+    virtual type::Type const *typeInFunction(type::Function const *fn) const = 0;
     
     virtual void visit(Visitor *visitor) const = 0;
     virtual void visit(MutatingVisitor *visitor) = 0;
@@ -18,24 +20,15 @@ namespace cfg {
     }
   };
   
-  struct Function {
-    Symbol name;
-    Value *root;
-    size_t paramCount;
-    
-    bool operator==(Function const &rhs) const;
-    
-    inline bool operator!=(Function const &rhs) {
-      return !(*this == rhs);
-    }
-  };
-  
-  struct Package {
-    Arena::vector<Function> exports;
+  class Package {
+  public:
+    typedef Arena::unordered_map<TypedSymbol, Value *>::value_type Record;
     
     Package(Arena *arena)
-    : exports(arena->allocator<Function>())
+    : functions(arena->allocator<Record>())
     {}
+    
+    Arena::unordered_map<TypedSymbol, Value *> functions;
     
     bool operator==(Package const &rhs) const;
     
@@ -58,48 +51,72 @@ namespace cfg {
     virtual void visit(Visitor *visitor) const;
     virtual void visit(MutatingVisitor *visitor);
     virtual bool operator==(Value const &rhs) const;
+    
+    virtual type::Type const *typeInFunction(type::Function const *fn) const;
   };
   
-  struct PrimitiveOp : Value {
+  struct BinaryOp : Value {
     enum Operation {
-      Add, Multiply
+      ADD, MUL
     };
     
     Operation operation;
-    Arena::vector<Value *> operands;
-    
-    explicit PrimitiveOp(Arena *arena)
-    : operands(arena->allocator<Value *>())
-    {}
+    Value *lhs;
+    Value *rhs;
     
     virtual void visit(Visitor *visitor) const;
     virtual void visit(MutatingVisitor *visitor);
     virtual bool operator==(Value const &rhs) const;
+    
+    virtual type::Type const *typeInFunction(type::Function const *fn) const;
   };
   
   struct FunctionRef : Value {
     Symbol name;
+    type::Function const *type;
     
     virtual void visit(Visitor *visitor) const;
     virtual void visit(MutatingVisitor *visitor);
     virtual bool operator==(Value const &rhs) const;
+    
+    virtual type::Function const *typeInFunction(type::Function const *fn) const;
+  };
+  
+  struct IndirectValue : Value {
+    Value *actualValue;
+    
+    virtual void visit(Visitor *visitor) const;
+    virtual void visit(MutatingVisitor *visitor);
+    virtual bool operator==(Value const &rhs) const;
+    
+    virtual type::Type const *typeInFunction(type::Function const *fn) const;
   };
   
   struct ParamRef : Value {
+    ParamRef()
+    {}
+    
+    explicit ParamRef(size_t i)
+    : index(i)
+    {}
+    
     size_t index;
     
     virtual void visit(Visitor *visitor) const;
     virtual void visit(MutatingVisitor *visitor);
     virtual bool operator==(Value const &rhs) const;
+    
+    virtual type::Type const *typeInFunction(type::Function const *fn) const;
   };
   
   struct FPValue : Value {
     double value;
-    size_t precision;
     
     virtual void visit(Visitor *visitor) const;
     virtual void visit(MutatingVisitor *visitor);
     virtual bool operator==(Value const &rhs) const;
+    
+    virtual type::Type const *typeInFunction(type::Function const *fn) const;
   };
   
   
@@ -107,7 +124,7 @@ namespace cfg {
   
   struct Value::Visitor {
     virtual void acceptCall(CallFunc const *v) = 0;
-    virtual void acceptPrimitive(PrimitiveOp const *v) = 0;
+    virtual void acceptBinaryOp(BinaryOp const *v) = 0;
     virtual void acceptFunctionRef(FunctionRef const *v) = 0;
     virtual void acceptParamRef(ParamRef const *v) = 0;
     virtual void acceptFPValue(FPValue const *v) = 0;
@@ -115,7 +132,7 @@ namespace cfg {
   
   struct Value::MutatingVisitor {
     virtual void acceptCall(CallFunc *v) = 0;
-    virtual void acceptPrimitive(PrimitiveOp *v) = 0;
+    virtual void acceptBinaryOp(BinaryOp *v) = 0;
     virtual void acceptFunctionRef(FunctionRef *v) = 0;
     virtual void acceptParamRef(ParamRef *v) = 0;
     virtual void acceptFPValue(FPValue *v) = 0;

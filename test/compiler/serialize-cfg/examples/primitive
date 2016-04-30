@@ -1,1 +1,1 @@
-(myFunc 0 (add (fp 8 4.2) (fp 8 2.4)))
+(myFunc [F32] (add (fp 4.2) (fp 2.4)))

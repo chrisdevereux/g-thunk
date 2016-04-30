@@ -1,1 +1,1 @@
-(myFunc 0 (fp 8 8.2))
+(myFunc [F32] (fp 8.2))

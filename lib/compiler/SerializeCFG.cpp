@@ -1,4 +1,5 @@
 #include "SerializeCFG.hpp"
+#include "SerializeType.hpp"
 #include "StringifyUtil.hpp"
 
 namespace cfg {
@@ -18,12 +19,12 @@ namespace cfg {
     
     // SSA value types
     virtual void acceptCall(CallFunc const *v);
-    virtual void acceptPrimitive(PrimitiveOp const *v);
+    virtual void acceptBinaryOp(BinaryOp const *v);
     virtual void acceptFunctionRef(FunctionRef const *v);
     virtual void acceptParamRef(ParamRef const *v);
     virtual void acceptFPValue(FPValue const *v);
     
-    void acceptFunction(Function const *v);
+    void acceptPackageFunction(std::pair<TypedSymbol const, cfg::Value *> const *v);
     void acceptPackage(Package const *v);
   };
   
@@ -42,7 +43,7 @@ namespace cfg {
   
   // Parse
   template <typename Action>
-  Grammar call(Action out) {
+  auto call(Action out) {
     return taggedSExp("call", [=](State const &state) -> Result {
       auto result = state.create<CallFunc>(state.arena);
       
@@ -69,43 +70,46 @@ namespace cfg {
   
   // Parse type
   template <typename Action>
-  Grammar operation(Action out) {
+  auto operation(Action out) {
     return [=](State const &state) -> Result {
-      return state >> match("add") >> emitValue(PrimitiveOp::Add, out)
-      ?: state >> match("mul") >> emitValue(PrimitiveOp::Multiply, out)
+      return state >> match("add") >> emitValue(BinaryOp::ADD, out)
+      ?: state >> match("mul") >> emitValue(BinaryOp::MUL, out)
       ;
     };
   }
   
   // Stringify type
-  char const *operationString(PrimitiveOp::Operation op) {
+  char const *operationString(BinaryOp::Operation op) {
     switch (op) {
-      case PrimitiveOp::Add: return "add";
-      case PrimitiveOp::Multiply: return "mul";
+      case BinaryOp::ADD: return "add";
+      case BinaryOp::MUL: return "mul";
     }
   }
   
   // Parse
   template <typename Action>
-  Grammar primitive(Action out) {
+  auto primitive(Action out) {
     return sExp([=](State const &state) -> Result {
-      auto result = state.create<PrimitiveOp>(state.arena);
+      auto result = state.create<BinaryOp>();
       
       return state
       >> operation(receive(&result->operation))
       >> whitespace
-      >> delimited(valueTree(collect(&result->operands)), whitespace)
+      >> valueTree(receive(&result->lhs))
+      >> whitespace
+      >> valueTree(receive(&result->rhs))
       >> emit(&result, out)
       ;
     });
   }
   
   // Stringify
-  void CFGStringifier::acceptPrimitive(const cfg::PrimitiveOp *v) {
+  void CFGStringifier::acceptBinaryOp(const cfg::BinaryOp *v) {
     stringify.begin();
     
     stringify.atom(operationString(v->operation));
-    stringify.each(v->operands, this);
+    stringify.compound(v->lhs, this);
+    stringify.compound(v->rhs, this);
     
     stringify.end();
   }
@@ -136,7 +140,7 @@ namespace cfg {
   
   // Parse
   template <typename Action>
-  Grammar paramRef(Action out) {
+  auto paramRef(Action out) {
     return taggedSExp("param", [=](State const &state) -> Result {
       auto result = state.create<ParamRef>();
       
@@ -164,8 +168,6 @@ namespace cfg {
       auto result = state.create<FPValue>();
       
       return state
-      >> integer(receive(&result->precision))
-      >> whitespace
       >> real(receive(&result->value))
       >> emit(&result, out)
       ;
@@ -176,7 +178,6 @@ namespace cfg {
   void CFGStringifier::acceptFPValue(const cfg::FPValue *v) {
     stringify.begin("fp");
     
-    stringify.atom(v->precision);
     stringify.atom(v->value);
     
     stringify.end();
@@ -203,49 +204,39 @@ namespace cfg {
   }
   
   
+  /** Type declaration **/
   
-  /** Function **/
-  
-  // Parse parameter type
-  template <typename Action>
-  Grammar typeExpr(Action out) {
-    Type placeholderType;
+  struct StringifyType : type::Type::Visitor {
+    Stringifier stringify;
     
-    return [=](State const &state) -> Result {
-      return state
-      >> identifierString(noop<Arena::string>())
-      >> emit(&placeholderType, out)
-      ;
-    };
-  }
-  
-  // Parse
-  template <typename Action>
-  Grammar function(Action out) {
-    return sExp([=](State const &state) -> Result {
-      Function result;
+    virtual void acceptAny(type::AnyType const *t) {
+      stringify.atom(t);
+    }
+    
+    virtual void acceptAtomic(type::Atomic const *t) {
+      stringify.atom(t);
+    }
+    
+    virtual void acceptFunction(type::Function const *t) {
+      stringify.begin("func");
       
-      return state
-      >> identifierString(receiveSymbol(&result.name))
-      >> whitespace
-      >> integer(receive(&result.paramCount))
-      >> whitespace
-      >> valueTree(receive(&result.root))
-      >> emit(&result, out)
-      ;
-    });
-  }
+      for (size_t i = 0 ; i < t->getArity(); ++i) {
+        stringify.compound(t->getParamType(i), this);
+      }
+      
+      stringify.end();
+    }
+    
+    virtual void acceptVector(type::Vector const *t) {
+      stringify.begin("vec");
+      stringify.compound(t->getInnerType(), this);
+      stringify.end();
+    }
+  };
   
-  // Stringify
-  void CFGStringifier::acceptFunction(const cfg::Function *v) {
-    stringify.begin();
-    
-    stringify.atom(v->name);
-    stringify.atom(v->paramCount);
-    stringify.compound(v->root, this);
-    
-    stringify.end();
-  }
+  
+  
+  
   
   
   /** Package **/
@@ -255,9 +246,23 @@ namespace cfg {
     return [=](State const &state) -> Result {
       Package result(state.arena);
       
+      auto function = sExp([&](State const &state) {
+        TypedSymbol key;
+        cfg::Value *val;
+        
+        return state
+        >> identifierString(receive(&key.name))
+        >> whitespace
+        >> type::unserialize(receive(&key.type))
+        >> whitespace
+        >> valueTree(receive(&val))
+        >> inject([&]{ result.functions[key] = val; })
+        ;
+      });
+      
       return state
       >> optionalWhitespace
-      >> delimited(function(collect(&result.exports)), whitespace)
+      >> delimited(function, whitespace)
       >> optionalWhitespace
       >> emit(&result, out)
       ;
@@ -265,8 +270,16 @@ namespace cfg {
   }
   
   // Stringify
+  void CFGStringifier::acceptPackageFunction(std::pair<TypedSymbol const, cfg::Value *> const *v) {
+    stringify.begin();
+    stringify.atom(v->first.name);
+    stringify.atom(v->first.type);
+    stringify.compound(v->second, this);
+    stringify.end();
+  }
+  
   void CFGStringifier::acceptPackage(const cfg::Package *v) {
-    stringify.each(v->exports, this, &CFGStringifier::acceptFunction);
+    stringify.each(v->functions, this, &CFGStringifier::acceptPackageFunction);
   }
 }
 

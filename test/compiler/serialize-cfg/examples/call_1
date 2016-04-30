@@ -1,1 +1,1 @@
-(myFunc 0 (call foo bar))
+(myFunc [F32] (call foo bar))
