@@ -4,6 +4,10 @@
 #include "Arena.hpp"
 
 namespace vm {
+  /**
+   Boxed VM buffer for serialization & tests
+  */
+  
   struct Data {
     enum Type : uint8_t {
       U32Value, F32Value, SymbolValue
@@ -12,8 +16,10 @@ namespace vm {
     union Value {
       Value() {}
       Value(float val): f32(val) {}
+      Value(double val): f32(val) {}
       Value(Symbol val): sym(val) {}
       Value(uint32_t val): u32(val) {}
+      Value(size_t val): u32((uint32_t)val) {}
       
       inline bool operator==(Value rhs) const {
         return u32 == rhs.u32;
@@ -26,19 +32,20 @@ namespace vm {
       float f32;
       Symbol sym;
       uint32_t u32;
-      struct {
-        uint16_t first;
-        uint16_t second;
-      } u16pair;
     };
     
-    static_assert(sizeof(Value) == 4, "value must be 32 bite wide");
+    static_assert(sizeof(Value) == 4, "value must be 32 bits wide");
     
     inline Data() {}
     
     inline Data(Type type_, Value value)
     : type(type_)
     , values(1, value)
+    {}
+    
+    inline Data(Type type_, uint32_t frameSize)
+    : type(type_)
+    , values(frameSize, Value())
     {}
 
     template <typename Iter>
@@ -49,6 +56,10 @@ namespace vm {
     }
     inline bool operator!=(Data const &rhs) const {
       return !(*this == rhs);
+    }
+    
+    uint32_t sampleCount() const {
+      return (uint32_t)values.size();
     }
     
     Type type;

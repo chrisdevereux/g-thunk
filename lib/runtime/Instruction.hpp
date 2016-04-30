@@ -22,14 +22,27 @@ namespace vm {
       // Copy the n-th from top stack value onto the stack.
       COPY,
       
-      // Push an additional reference to the n-th from top vector onto the stack 
+      // Push an additional reference to the n-th from top vector onto the stack
       REF_VEC,
+      
+      // Drop stack slots in the range (top - n - 1)..(top - 1) so that the top
+      // value drops n values. Requires that the top slot is a scalar.
+      DROP_S,
+      
+      // Drop stack slots in the range (top - n - 1)..(top - 1) so that the top
+      // value drops n values. Requires that the top slot is a vector.
+      DROP_V,
       
       // Replace the value at the top of the stack with a vector containing all values.
       FILL,
       
       // Arithmetic ops.
-      // Performs the aritmetic operation on the top two stack values.
+      //
+      // Performs the aritmetic operation on the top two stack values
+      // and replace them with the result.
+      //
+      // Payload is a u32 stating how many additional stack slots
+      // to pop when returning the value.
       //
       // Each operation comes in four flavours:
       //   VV - Vector-Vector
@@ -51,24 +64,40 @@ namespace vm {
       
       // Call function
       //
-      // Expects the operand value to be a symbol referencing a function.
-      // Call to the function passing parameters from the stack in LIFO order.
+      // Call the function referenced at stack top, passing parameters from
+      // the stack with the first argument at the top.
+      //
+      // The callee should pop all operands from the stack before returning.
+      //
+      // Payload is a u32 stating how many additional stack slots
+      // to pop when returning the value.
       CALL,
       
-      // Exit function.
+      
+      // Signal that the next instruction is a function's return value, so the
+      // VM should pop an additional n params from the stack (where n is the payload of
+      // the CALL operation that called the function)
       //
-      // If a function uses all of its arguments, the last operation will write its output
-      // to the function's output slot without any extra work.
-      //
-      // Fixup variants allow the return value to overwrite unused function parameters.
-      // The operand is a pair of slot offsets for the overwritten scalar and vector slots
-      EXIT_FIXUP_S,
-      EXIT_FIXUP_V,
+      // No-op if executed in the main function.
+      RET,
+      
+      // Return from the current function, or finish execution if in the main function.
       EXIT
     };
     
+    Instruction() {}
+    Instruction(Opcode operation_, Data::Value operand_, Data::Type operandType_ = Data::U32Value)
+    : operation(operation_)
+    , operandType(operandType_)
+    , operand(operand_)
+    {}
+    
+    explicit Instruction(Opcode operation_)
+    : operation(operation_)
+    {}
+    
     Opcode operation;
-    Data::Type operandType;
+    Data::Type operandType = Data::U32Value;
     Data::Value operand;
     
     inline bool operator==(const Instruction &rhs) const {
@@ -76,15 +105,19 @@ namespace vm {
       
       switch (operation) {
         case PUSH:
-          return operandType == rhs.operandType && operand.u32 == rhs.operand.u32;
+          if (operandType != rhs.operandType) return false;
+          
+          switch (operandType) {
+            case Data::F32Value: return operand.f32 == rhs.operand.f32;
+            case Data::U32Value: return operand.u32 == rhs.operand.u32;
+            case Data::SymbolValue: return operand.sym == rhs.operand.sym;
+          }
           
         case COPY:
         case REF_VEC:
+        case DROP_S:
+        case DROP_V:
         case PUSH_SYM:
-        case EXIT_FIXUP_S:
-        case EXIT_FIXUP_V:
-          return operand.u32 == rhs.operand.u32;
-          
         case CALL:
         case FILL:
         case ADD_VV:
@@ -95,7 +128,10 @@ namespace vm {
         case MUL_VS:
         case MUL_SV:
         case MUL_SS:
+          return operand.u32 == rhs.operand.u32;
+          
         case EXIT:
+        case RET:
           return true;
       }
     }

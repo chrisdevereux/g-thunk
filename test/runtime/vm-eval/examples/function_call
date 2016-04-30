@@ -1,16 +1,20 @@
 @given:
   .main
+  push f32 1
   push_sym myFunc
-  call
+  ret
+  call 0
   exit
 
   .myFunc
   push f32 2
-  add_sv
+  add_ss 0
+  ret
+  add_sv 0
   exit
 
 @with:
   {1 2 3}
 
 @expect:
-  {3 4 5}
+  {4 5 6}

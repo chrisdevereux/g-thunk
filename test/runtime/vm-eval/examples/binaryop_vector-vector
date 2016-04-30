@@ -1,13 +1,12 @@
 @given:
   .main
-  push f32 2
-  fill
-  add_vv
+  ref_vec 1
+  ret
+  add_vv 0
   exit
 
 @with:
   {1 2 3}
 
 @expect:
-  {3 4 5}
-
+  {2 4 6}

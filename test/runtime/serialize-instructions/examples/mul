@@ -1,4 +1,4 @@
-mul_ss
-mul_sv
-mul_vs
-mul_vv
+mul_ss 4
+mul_sv 3
+mul_vs 2
+mul_vv 1

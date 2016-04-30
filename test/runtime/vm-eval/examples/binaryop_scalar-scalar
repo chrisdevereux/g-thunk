@@ -2,9 +2,10 @@
   .main
   push f32 2
   push f32 3
-  add_ss
+  add_ss 1
+  ret
   fill
-  exit_fixup_v 1 1
+  exit
   
 @with:
   {1 2 3}

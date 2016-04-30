@@ -1,7 +1,8 @@
 @given:
   .main
   push f32 2
-  add_sv
+  ret
+  add_sv 0
   exit
   
 @with:

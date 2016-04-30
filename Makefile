@@ -3,7 +3,7 @@ $(shell mkdir -p .build)
 CPPFLAGS=-Ilib/compiler -Wall -Ilib/runtime -Ilib/support -std=gnu++14
 TEST_CPPFLAGS=-Itest/runners
 
-LDFLAGS=-lc++
+LDFLAGS=-lc++ -framework Accelerate
 CXX=clang++
 
 SRCS        := $(shell find lib -name *.cpp)

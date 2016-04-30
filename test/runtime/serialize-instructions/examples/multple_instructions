@@ -1,7 +1,7 @@
 
 .main
 .alias-main
-call
+call 3
 exit
 
 .other

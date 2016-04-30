@@ -50,19 +50,16 @@ namespace vm {
         auto intOperand = integer<uint32_t>(receive(&result.operand.u32));
         auto symbolOperand = identifierString(receive(&result.operand.sym));
         auto typedOperand = typedValue(receive(&result.operand), receive(&result.operandType));
-        auto u16PairOperand = integer<uint16_t>(receive(&result.operand.u16pair.first))
-        >> spaces >> integer<uint16_t>(receive(&result.operand.u16pair.second))
-        ;
         
         return state
-        >> match("push")
-        >> require("operand for push op", spaces >> typedOperand)
-        >> opcode(Instruction::PUSH) >> emit(&result, out)
-        
-        ?: state
         >> match("push_sym")
         >> require("symbol name as operand for push_sym op", spaces >> symbolOperand)
         >> opcode(Instruction::PUSH_SYM) >> emit(&result, out)
+        
+        ?: state
+        >> match("push")
+        >> require("operand for push op", spaces >> typedOperand)
+        >> opcode(Instruction::PUSH) >> emit(&result, out)
         
         ?: state
         >> match("copy")
@@ -78,19 +75,40 @@ namespace vm {
         >> require("slot offset as operand for ref_vec op", spaces >> intOperand)
         >> opcode(Instruction::REF_VEC) >> emit(&result, out)
         
+        ?: state
+        >> match("drop_s")
+        >> require("slot offset as operand for drop_s op", spaces >> intOperand)
+        >> opcode(Instruction::DROP_S) >> emit(&result, out)
+        
+        ?: state
+        >> match("drop_v")
+        >> require("slot offset as operand for drop_v op", spaces >> intOperand)
+        >> opcode(Instruction::DROP_V) >> emit(&result, out)
+        
 #define BinaryOpType(OPCODE_PREFIX, STR_PREFIX) \
 ?: state \
 >> match(STR_PREFIX "_vv") \
->> opcode(Instruction::OPCODE_PREFIX##_VV) >> emit(&result, out) \
+>> require("return offset as operand for " STR_PREFIX "_vv op", spaces >> intOperand) \
+>> opcode(Instruction::OPCODE_PREFIX##_VV) \
+>> emit(&result, out) \
+\
 ?: state \
 >> match(STR_PREFIX "_sv") \
->> opcode(Instruction::OPCODE_PREFIX##_SV) >> emit(&result, out) \
+>> require("return offset as operand for " STR_PREFIX "_sv op", spaces >> intOperand) \
+>> opcode(Instruction::OPCODE_PREFIX##_SV) \
+>> emit(&result, out) \
+\
 ?: state \
 >> match(STR_PREFIX "_vs") \
->> opcode(Instruction::OPCODE_PREFIX##_VS) >> emit(&result, out) \
+>> require("return offset as operand for " STR_PREFIX "_vs op", spaces >> intOperand) \
+>> opcode(Instruction::OPCODE_PREFIX##_VS) \
+>> emit(&result, out) \
+\
 ?: state \
 >> match(STR_PREFIX "_ss") \
->> opcode(Instruction::OPCODE_PREFIX##_SS) >> emit(&result, out) \
+>> require("return offset as operand for " STR_PREFIX "_ss op", spaces >> intOperand) \
+>> opcode(Instruction::OPCODE_PREFIX##_SS) \
+>> emit(&result, out) \
 
         BinaryOpType(ADD, "add")
         BinaryOpType(MUL, "mul")
@@ -99,20 +117,16 @@ namespace vm {
         
         ?: state
         >> match("call")
+        >> require("return slot as operand for call op", spaces >> intOperand)
         >> opcode(Instruction::CALL) >> emit(&result, out)
         
         ?: state
-        >> match("exit_fixup_v")
-        >> spaces >> u16PairOperand
-        >> opcode(Instruction::EXIT_FIXUP_V) >> emit(&result, out)
+        >> match("ret")
+        >> opcode(Instruction::RET) >> emit(&result, out)
         
         ?: state
-        >> match("exit_fixup_s")
-        >> spaces >> u16PairOperand
-        >> opcode(Instruction::EXIT_FIXUP_S) >> emit(&result, out)
-        
-        ?: state
-        >> match("exit") >> opcode(Instruction::EXIT) >> emit(&result, out)
+        >> match("exit")
+        >> opcode(Instruction::EXIT) >> emit(&result, out)
         ;
       };
     }
@@ -172,11 +186,17 @@ std::ostream &operator <<(std::ostream &str, vm::Instruction const &inst) {
     case Instruction::REF_VEC:
       return str << "ref_vec " << inst.operand.u32;
       
+    case Instruction::DROP_S:
+      return str << "drop_s " << inst.operand.u32;
+      
+    case Instruction::DROP_V:
+      return str << "drop_v " << inst.operand.u32;
+      
 #define BinaryOpType(OPCODE_PREFIX, STR_PREFIX) \
-case Instruction::OPCODE_PREFIX##_VV: return str << STR_PREFIX << "_vv"; \
-case Instruction::OPCODE_PREFIX##_SV: return str << STR_PREFIX << "_sv"; \
-case Instruction::OPCODE_PREFIX##_VS: return str << STR_PREFIX << "_vs"; \
-case Instruction::OPCODE_PREFIX##_SS: return str << STR_PREFIX << "_ss";
+case Instruction::OPCODE_PREFIX##_VV: return str << STR_PREFIX << "_vv" << " " << inst.operand.u32; \
+case Instruction::OPCODE_PREFIX##_SV: return str << STR_PREFIX << "_sv" << " " << inst.operand.u32; \
+case Instruction::OPCODE_PREFIX##_VS: return str << STR_PREFIX << "_vs" << " " << inst.operand.u32; \
+case Instruction::OPCODE_PREFIX##_SS: return str << STR_PREFIX << "_ss" << " " << inst.operand.u32;
       
       BinaryOpType(ADD, "add")
       BinaryOpType(MUL, "mul")
@@ -184,20 +204,11 @@ case Instruction::OPCODE_PREFIX##_SS: return str << STR_PREFIX << "_ss";
 #undef BinaryOpType
       
     case Instruction::CALL:
-      str << "call";
+      str << "call" << " " << inst.operand.u32;
       return str;
       
-    case Instruction::EXIT_FIXUP_S:
-      return str << "exit_fixup_s "
-      << inst.operand.u16pair.first << " "
-      << inst.operand.u16pair.second
-      ;
-      
-    case Instruction::EXIT_FIXUP_V:
-      return str << "exit_fixup_v "
-      << inst.operand.u16pair.first << " "
-      << inst.operand.u16pair.second
-      ;
+    case Instruction::RET:
+      return str << "ret";
       
     case Instruction::EXIT:
       return str << "exit";
