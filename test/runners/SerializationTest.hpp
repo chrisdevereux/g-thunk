@@ -6,8 +6,8 @@
 #include "ParseUtil.hpp"
 
 // Ensure that serialized values unserialize as an equal value.
-template <typename Value>
-int serializationTest(int argc, char const **argv, parse::Grammar(*parser)(parse::GenericAction<Value>)) {
+template <typename Value, typename Compare>
+int serializationTest(int argc, char const **argv, parse::Grammar(*parser)(parse::GenericAction<Value>), Compare compare) {
   using std::unique_ptr;
   
   std::vector<char const *> args(argv + 1, argv + argc);
@@ -21,13 +21,18 @@ int serializationTest(int argc, char const **argv, parse::Grammar(*parser)(parse
     Arena arena;
     
     std::ifstream input(filepath);
+    std::vector<std::string> errors;
     
     unique_ptr<Value> inputValue;
     unique_ptr<Value> unserializedValue;
     
-    if (!read(input, &arena, parser(receivePointerValue(&inputValue)))) {
+    if (!read(input, &arena, parser(receivePointerValue(&inputValue)), &errors)) {
       std::cout << std::endl << "FAILED: " << filepath << std::endl
       << "Invalid input representation" << std::endl;
+      
+      for (auto err : errors) {
+        std::cout << err << std::endl;
+      }
       
       continue;
     }
@@ -37,15 +42,19 @@ int serializationTest(int argc, char const **argv, parse::Grammar(*parser)(parse
     
     serialized.seekg(0, serialized.beg);
     
-    if (!read(serialized, &arena, parser(receivePointerValue(&unserializedValue)))) {
+    if (!read(serialized, &arena, parser(receivePointerValue(&unserializedValue)), &errors)) {
       std::cout << std::endl << "FAILED: " << filepath << std::endl
       << "Invalid serialized representation:" << std::endl
       << serialized.str();
       
+      for (auto err : errors) {
+        std::cout << err << std::endl;
+      }
+      
       continue;
     }
     
-    if (*unserializedValue != *inputValue) {
+    if (!compare(*unserializedValue, *inputValue)) {
       std::cout << std::endl << "FAILED: " << filepath << std::endl
       << "Expected input representation to equal reparsed representation:" << std::endl
       << serialized.str();
@@ -68,4 +77,9 @@ int serializationTest(int argc, char const **argv, parse::Grammar(*parser)(parse
   << passCount << "/" << args.size() << " Passed" << std::endl;
   
   return (passCount == args.size()) ? 0 : 1;
+}
+
+template <typename Value>
+int serializationTest(int argc, char const **argv, parse::Grammar(*parser)(parse::GenericAction<Value const &>)) {
+  return serializationTest(argc, argv, parser, std::equal_to<Value>());
 }
