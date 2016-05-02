@@ -3,6 +3,7 @@
 #include "TypedSymbol.hpp"
 #include "Arena.hpp"
 #include "Type.hpp"
+#include "Instruction.hpp"
 
 namespace cfg {
   struct Value {
@@ -56,11 +57,7 @@ namespace cfg {
   };
   
   struct BinaryOp : Value {
-    enum Operation {
-      ADD, MUL
-    };
-    
-    Operation operation;
+    vm::Instruction::Opcode operation;
     Value *lhs;
     Value *rhs;
     

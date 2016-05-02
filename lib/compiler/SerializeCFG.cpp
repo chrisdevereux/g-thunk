@@ -2,6 +2,8 @@
 #include "SerializeType.hpp"
 #include "StringifyUtil.hpp"
 
+#include <sstream>
+
 namespace cfg {
   using namespace parse;
   
@@ -72,17 +74,38 @@ namespace cfg {
   template <typename Action>
   auto operation(Action out) {
     return [=](State const &state) -> Result {
-      return state >> match("add") >> emitValue(BinaryOp::ADD, out)
-      ?: state >> match("mul") >> emitValue(BinaryOp::MUL, out)
+#define BINARY_INTRINSIC_VARIANTS(OPCODE_PREFIX, SYM_PREFIX) \
+state >> match(SYM_PREFIX "_vv") >> emitValue(vm::Instruction::OPCODE_PREFIX##_VV, out) \
+?: state >> match(SYM_PREFIX "_sv") >> emitValue(vm::Instruction::OPCODE_PREFIX##_SV, out) \
+?: state >> match(SYM_PREFIX "_vs") >> emitValue(vm::Instruction::OPCODE_PREFIX##_VS, out) \
+?: state >> match(SYM_PREFIX "_ss") >> emitValue(vm::Instruction::OPCODE_PREFIX##_SS, out)
+      
+      
+      return BINARY_INTRINSIC_VARIANTS(ADD, "add")
+      ?: BINARY_INTRINSIC_VARIANTS(MUL, "mul")
       ;
+      
+#undef BINARY_INTRINSIC_VARIANTS
     };
   }
   
   // Stringify type
-  char const *operationString(BinaryOp::Operation op) {
+  char const *operationString(vm::Instruction::Opcode op) {
     switch (op) {
-      case BinaryOp::ADD: return "add";
-      case BinaryOp::MUL: return "mul";
+#define BINARY_INTRINSIC_VARIANTS(OPCODE_PREFIX, SYM_PREFIX) \
+case vm::Instruction::OPCODE_PREFIX##_VV: return SYM_PREFIX "_vv"; \
+case vm::Instruction::OPCODE_PREFIX##_VS: return SYM_PREFIX "_vs"; \
+case vm::Instruction::OPCODE_PREFIX##_SV: return SYM_PREFIX "_sv"; \
+case vm::Instruction::OPCODE_PREFIX##_SS: return SYM_PREFIX "_ss"; \
+
+        BINARY_INTRINSIC_VARIANTS(ADD, "add");
+        BINARY_INTRINSIC_VARIANTS(MUL, "mul");
+        
+#undef BINARY_INTRINSIC_VARIANTS
+      default: {
+        auto err = std::stringstream() << "Cannot serialize binary operator " << op;
+        throw std::logic_error(err.str());
+      }
     }
   }
   
