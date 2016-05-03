@@ -143,19 +143,24 @@ case vm::Instruction::OPCODE_PREFIX##_SS: return SYM_PREFIX "_ss"; \
   // Parse
   template <typename Action>
   auto functionRef(Action out) {
-    return [=](State const &state) -> Result {
+    return taggedSExp("fn", [=](State const &state) -> Result {
       auto result = state.create<FunctionRef>();
       
       return state
       >> identifierString(receive(&result->name))
+      >> whitespace
+      >> type::unserialize::function(receive(&result->type))
       >> emit(&result, out)
       ;
-    };
+    });
   }
   
   // Stringify
   void CFGStringifier::acceptFunctionRef(const cfg::FunctionRef *v) {
+    stringify.begin("fn");
     stringify.atom(v->name);
+    stringify.atom(v->type);
+    stringify.end();
   }
   
   
@@ -276,7 +281,7 @@ case vm::Instruction::OPCODE_PREFIX##_SS: return SYM_PREFIX "_ss"; \
         return state
         >> identifierString(receive(&key.name))
         >> whitespace
-        >> type::unserialize(receive(&key.type))
+        >> type::unserialize::type(receive(&key.type))
         >> whitespace
         >> valueTree(receive(&val))
         >> inject([&]{ result.functions[key] = val; })

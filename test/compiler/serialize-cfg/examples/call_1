@@ -1,1 +1,1 @@
-(myFunc [F32] (call foo bar))
+(myFunc [F32] (call (fn foo [F32]) (fn bar [F32])))

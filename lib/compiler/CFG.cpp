@@ -116,4 +116,12 @@ namespace cfg {
   type::Type const *FPValue::typeInFunction(type::Function const *fn) const {
     return type::F32();
   }
+  
+  
+  /** Properties **/
+  
+  bool CallFunc::hasVectorReturnInFunction(const type::Function *fn) const {
+    auto fnType = dynamic_cast<type::Function const *>(typeInFunction(fn));
+    return fnType && fnType->getResultType()->isVector();
+  }
 }

@@ -53,6 +53,8 @@ namespace cfg {
     virtual void visit(MutatingVisitor *visitor);
     virtual bool operator==(Value const &rhs) const;
     
+    bool hasVectorReturnInFunction(type::Function const *fn) const;
+    
     virtual type::Type const *typeInFunction(type::Function const *fn) const;
   };
   

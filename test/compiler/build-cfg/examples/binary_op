@@ -8,6 +8,6 @@
    (mul_vs (param 0) (param 1)))
 
   (main [vF32:vF32]
-   (call *
+   (call (fn * [vF32:F32:vF32])
     (param 0)
     (fp 2)))

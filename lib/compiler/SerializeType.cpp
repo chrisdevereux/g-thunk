@@ -65,7 +65,7 @@ namespace {
   auto functionType(Action out) {
     return [=](State const &state) -> Result {
       Arena::vector<type::Type const *> types(state.allocator<type::Type const *>());
-      type::Type const *result;
+      type::Function const *result;
       
       return state
       >> match("[")
