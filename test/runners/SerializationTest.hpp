@@ -26,7 +26,7 @@ int serializationTest(int argc, char const **argv, parse::Grammar(*parser)(parse
     unique_ptr<Value> inputValue;
     unique_ptr<Value> unserializedValue;
     
-    if (!read(input, &arena, parser(receivePointerValue(&inputValue)), &errors)) {
+    if (!read(input, &arena, parser(receivePointerValue(&inputValue)) >> eof(), &errors)) {
       std::cout << std::endl << "FAILED: " << filepath << std::endl
       << "Invalid input representation" << std::endl;
       
@@ -42,7 +42,7 @@ int serializationTest(int argc, char const **argv, parse::Grammar(*parser)(parse
     
     serialized.seekg(0, serialized.beg);
     
-    if (!read(serialized, &arena, parser(receivePointerValue(&unserializedValue)), &errors)) {
+    if (!read(serialized, &arena, parser(receivePointerValue(&unserializedValue)) >> eof(), &errors)) {
       std::cout << std::endl << "FAILED: " << filepath << std::endl
       << "Invalid serialized representation:" << std::endl
       << serialized.str();

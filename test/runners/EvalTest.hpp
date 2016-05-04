@@ -32,6 +32,7 @@ int evalTest(int argc, char const *const *argv, Parser<GivenValue> given, Parser
       >> requiredMatch("@with:") >> require("with clause value", optionalWhitespace >> params(receivePointerValue(&paramVal))) >> optionalWhitespace
       >> requiredMatch("@expect:") >> require("expect clause value", optionalWhitespace >> expect(receivePointerValue(&expectedVal))) >> optionalWhitespace
       >> optionalWhitespace
+      >> require("expected EOF", eof())
       ;
     };
     

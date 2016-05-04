@@ -30,6 +30,7 @@ int givenExpectTest(int argc, char const *const *argv, Parser<GivenValue> given,
       >> requiredMatch("@given:") >> require("given clause value", optionalWhitespace >> given(receivePointerValue(&givenVal))) >> optionalWhitespace
       >> requiredMatch("@expect:") >> require("expect clause value", optionalWhitespace >> expect(receivePointerValue(&expectedVal))) >> optionalWhitespace
       >> optionalWhitespace
+      >> require("EOF", eof())
       ;
     };
     

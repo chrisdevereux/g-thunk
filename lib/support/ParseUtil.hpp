@@ -282,6 +282,17 @@ namespace parse {
     };
   }
   
+  inline auto eof() {
+    return [&](State const &state) -> Result {
+      if (state.size() == 0) {
+        return state;
+        
+      } else {
+        return reject;
+      }
+    };
+  }
+  
   // Set a constant value
   template <typename T>
   auto set(T value, T *target) {
