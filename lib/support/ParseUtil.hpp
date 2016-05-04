@@ -446,6 +446,8 @@ namespace parse {
   /** Conveniences **/
   
   namespace {
+    auto uppercase = range('A', 'Z');
+    auto lowercase = range('a', 'z');
     auto digitChar = range('0', '9');
     auto whitespaceChar = range(0x01, ' ');
     auto printableChar = range('!', CHAR_MAX);
@@ -535,24 +537,28 @@ namespace parse {
   }
   
   // A valid identifier
-  template <typename Action>
-  auto identifierString(Action const &out) {
+  template <typename Head, typename Tail, typename Action>
+  auto identifierString(Head headPattern, Tail tailPattern, Action const &out) {
     using namespace operators;
-    
-    auto identifierChar = printableChar && !parenChar;
-    auto start = identifierChar && !digitChar;
     
     return [=](State const &state) {
       Arena::string chars(state.allocator<char>());
       Symbol result;
       
       return state
-      >> match(start, buildString(&chars))
-      >> optional(repeat(match(identifierChar, buildString(&chars))))
+      >> match(headPattern, buildString(&chars))
+      >> optional(repeat(match(tailPattern, buildString(&chars))))
       >> inject([&] { result = Symbol::get(chars.c_str()); })
       >> emit(&result, out)
       ;
     };
+  }
+  
+  template <typename Action>
+  auto identifierString(Action const &out) {
+    using namespace operators;
+    
+    return identifierString(printableChar && !parenChar, digitChar || (printableChar && !parenChar), out);
   }
   
   template <typename T = double, typename Action>
