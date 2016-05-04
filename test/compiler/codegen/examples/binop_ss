@@ -1,0 +1,10 @@
+@given:
+  (test [F32] (add_ss (fp 4.1) (fp 4.0)))
+  
+@expect:
+  .test_[F32]
+  push f32 4.0
+  push f32 4.1
+  ret
+  add_ss 0
+  exit

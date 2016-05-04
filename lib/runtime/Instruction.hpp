@@ -92,7 +92,7 @@ namespace vm {
     , operand(operand_)
     {}
     
-    explicit Instruction(Opcode operation_)
+    Instruction(Opcode operation_)
     : operation(operation_)
     {}
     

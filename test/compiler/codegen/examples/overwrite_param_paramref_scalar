@@ -1,0 +1,9 @@
+@given:
+  (test [F32:F32:F32] (param 1))
+  
+@expect:
+  .test_[F32:F32:F32]
+  copy 2
+  ret
+  drop_s 2
+  exit

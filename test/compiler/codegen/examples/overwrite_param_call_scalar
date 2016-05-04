@@ -1,0 +1,10 @@
+@given:
+  (test [F32:F32:F32] (call (fn scalFn [F32:F32]) (fp 4.0)))
+  
+@expect:
+  .test_[F32:F32:F32]
+  push f32 4.0
+  push_sym scalFn_[F32:F32]
+  ret
+  call 2
+  exit

@@ -1,0 +1,12 @@
+@given:
+  (test [vF32] (add_vv (call (fn myVec [vF32])) (call (fn myVec [vF32]))))
+  
+@expect:
+  .test_[vF32]
+  push_sym myVec_[vF32]
+  call 0
+  push_sym myVec_[vF32]
+  call 0
+  ret
+  add_vv 0
+  exit

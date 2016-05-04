@@ -1,0 +1,10 @@
+@given:
+  (test [F32:F32:vF32] (call (fn vecFn [F32:vF32]) (fp 4.0)))
+  
+@expect:
+  .test_[F32:F32:vF32]
+  push f32 4.0
+  push_sym vecFn_[F32:vF32]
+  ret
+  call 2
+  exit

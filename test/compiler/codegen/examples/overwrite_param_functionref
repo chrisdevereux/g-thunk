@@ -1,0 +1,9 @@
+@given:
+  (test [F32:F32:[F32]] (fn extFunc [F32]))
+  
+@expect:
+  .test_[F32:F32:[F32]]
+  push_sym extFunc_[F32]
+  ret
+  drop_s 2
+  exit

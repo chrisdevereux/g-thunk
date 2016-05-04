@@ -1,0 +1,9 @@
+@given:
+  (test [vF32:vF32:vF32] (param 1))
+  
+@expect:
+  .test_[vF32:vF32:vF32]
+  ref_vec 2
+  ret
+  drop_v 2
+  exit

@@ -1,0 +1,9 @@
+@given:
+  (test [F32:F32:F32] (fp 4.1))
+  
+@expect:
+  .test_[F32:F32:F32]
+  push f32 4.1
+  ret
+  drop_s 2
+  exit
