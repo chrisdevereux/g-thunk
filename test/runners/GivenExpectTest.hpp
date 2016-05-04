@@ -74,3 +74,10 @@ int givenExpectTest(int argc, char const *const *argv, Parser<GivenValue> given,
   
   return (passCount == args.size()) ? 0 : 1;
 }
+
+template <typename Value>
+int givenExpectTest(int argc, char const *const *argv, Parser<Value> given, Parser<Value> expect) {
+  return givenExpectTest(argc, argv, given, expect, [](Value const &v) {
+    return v;
+  });
+}
