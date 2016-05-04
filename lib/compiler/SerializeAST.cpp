@@ -19,6 +19,7 @@ namespace ast {
     virtual void acceptScalar(Scalar const *s);
     virtual void acceptIdentifier(Identifier const *s);
     virtual void acceptFunction(Function const *s);
+    virtual void acceptOperatorSequence(OperatorSequence const *s);
     virtual void acceptApply(Apply const *s);
     virtual void acceptLexicalScope(LexicalScope const *s);
     
@@ -153,6 +154,55 @@ namespace ast {
   }
   
   
+  /** Operator Sequence **/
+  
+  // Parse
+  template <typename Action>
+  auto operatorSequenceTerm(Action const &out) {
+    return sExp([=](State const &state) -> Result {
+      OperatorSequence::Term result;
+      
+      return state
+      >> identifierString(receive(&result.symbol))
+      >> whitespace
+      >> expressionTree(receive(&result.operand))
+      >> emit(&result, out)
+      ;
+    });
+  }
+  
+  // Parse
+  template <typename Action>
+  auto operatorSequence(Action const &out) {
+    return taggedSExp("operators", [=](State const &state) -> Result {
+      OperatorSequence *result = state.create<OperatorSequence>(state.arena);
+      
+      return state
+      >> expressionTree(receive(&result->lhs))
+      >> whitespace
+      >> delimited(operatorSequenceTerm(collect(&result->terms)), whitespace)
+      >> emit(&result, out) >> log("operators")
+      ;
+    });
+  }
+  
+  // Stringify
+  void ASTStringifier::acceptOperatorSequence(const ast::OperatorSequence *s) {
+    stringify.begin("operators");
+    
+    stringify.compound(s->lhs, this);
+    
+    for (auto term : s->terms) {
+      stringify.begin();
+      stringify.atom(term.symbol);
+      stringify.compound(term.operand, this);
+      stringify.end();
+    }
+    
+    stringify.end();
+  }
+  
+  
   /** Scalar **/
   
   // Parse
@@ -182,6 +232,7 @@ namespace ast {
     return [=](State const &state) -> Result {
       return state >> log("try scope...") >> lexicalScope(result)
       ?: state >> log("try fndef...") >> functionDef(result)
+      ?: state >> log("try operators...") >> operatorSequence(result)
       ?: state >> log("try fncall...") >> functionCall(result)
       ?: state >> log("try ident...") >> identifier(result)
       ?: state >> log("try scalar...") >> scalar(result);

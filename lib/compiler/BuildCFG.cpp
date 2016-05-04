@@ -114,6 +114,10 @@ namespace {
       outputValue = context->resolveIdentifier(s->value, requestedType);
     }
     
+    virtual void acceptOperatorSequence(ast::OperatorSequence const *s) {
+      throw std::logic_error("Operator sequence should be removed before ast -> cfg transorm");
+    }
+    
     virtual void acceptFunction(ast::Function const *s) {
       throw std::runtime_error("Lambda expressions are not supported yet");
     }

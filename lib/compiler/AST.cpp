@@ -41,6 +41,19 @@ namespace ast {
     return this->value == that->value;
   }
   
+  bool OperatorSequence::operator==(const ast::Expression &rhs) const {
+    auto that = dynamic_cast<OperatorSequence const *>(&rhs);
+    if (!that) return false;
+    
+    return *this->lhs == *that->lhs
+    && this->terms == that->terms
+    ;
+  }
+  
+  bool OperatorSequence::Term::operator==(const OperatorSequence::Term &rhs) const {
+    return symbol == rhs.symbol && *operand == *rhs.operand;
+  }
+  
   bool Apply::operator==(const ast::Expression &rhs) const {
     auto that = dynamic_cast<Apply const *>(&rhs);
     if (!that) return false;
@@ -73,6 +86,9 @@ namespace ast {
   }
   void Identifier::visit(Expression::Visitor *visitor) const {
     visitor->acceptIdentifier(this);
+  }
+  void OperatorSequence::visit(Expression::Visitor *visitor) const {
+    visitor->acceptOperatorSequence(this);
   }
   void Apply::visit(Expression::Visitor *visitor) const {
     visitor->acceptApply(this);

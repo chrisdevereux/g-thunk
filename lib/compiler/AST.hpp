@@ -68,6 +68,25 @@ namespace ast {
     virtual bool operator ==(const Expression &rhs) const;
   };
   
+  struct OperatorSequence : public Expression {
+    struct Term {
+      Symbol symbol;
+      Expression const *operand;
+      
+      bool operator ==(const Term &rhs) const;
+    };
+    
+    explicit OperatorSequence(Arena *arena)
+    : terms(arena->allocator<Expression const *>())
+    {}
+    
+    Expression *lhs;
+    Arena::vector<Term> terms;
+    
+    virtual void visit(Visitor *visitor) const;
+    virtual bool operator ==(const Expression &rhs) const;
+  };
+  
   struct Apply : public Expression {
     Expression const *function;
     Arena::vector<Expression const *> params;
@@ -110,6 +129,7 @@ namespace ast {
   public:
     virtual void acceptScalar(Scalar const *s) = 0;
     virtual void acceptIdentifier(Identifier const *s) = 0;
+    virtual void acceptOperatorSequence(OperatorSequence const *s) = 0;
     virtual void acceptFunction(Function const *s) = 0;
     virtual void acceptApply(Apply const *s) = 0;
     virtual void acceptLexicalScope(LexicalScope const *s) = 0;
