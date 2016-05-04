@@ -1,0 +1,6 @@
+@given:
+  main x y = x + y;
+
+@expect:
+  (let main (\ x y (operators x (+ y))))
+

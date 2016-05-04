@@ -558,7 +558,8 @@ namespace parse {
   auto identifierString(Action const &out) {
     using namespace operators;
     
-    return identifierString(printableChar && !parenChar, digitChar || (printableChar && !parenChar), out);
+    auto baseCharset = printableChar && !parenChar;
+    return identifierString(baseCharset && !digitChar, baseCharset, out);
   }
   
   template <typename T = double, typename Action>
