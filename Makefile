@@ -1,9 +1,14 @@
 $(shell mkdir -p .build)
 
-CPPFLAGS=-Ilib/compiler -Wall -Ilib/runtime -Ilib/support -std=gnu++14
+CPPFLAGS=-I vendor/include -Ilib/compiler -Wall -Ilib/runtime -Ilib/support -std=gnu++14
 TEST_CPPFLAGS=-Itest/runners
 
-LDFLAGS=-lc++ -framework Accelerate
+LDFLAGS=-Lvendor/osx \
+				-lc++ -lsoundio -lncurses -luv \
+				-framework Accelerate \
+				-framework CoreFoundation \
+				-framework CoreAudio \
+				-framework AudioToolbox
 CXX=clang++
 
 SRCS        := $(shell find lib -name *.cpp)
